@@ -9,6 +9,8 @@ from kivymd.uix.slider import MDSlider
 from kivy.uix.accordion import Accordion, AccordionItem
 from kivymd.app import MDApp
 from PIL import Image
+from io import BytesIO
+from kivy.uix.image import Image as KivyImage
 
 class ConversionTypeScreen(MDScreen):
     def __init__(self, **kwargs):
@@ -60,8 +62,7 @@ class ConversionTypeScreen(MDScreen):
         app.engine.original_image = Image.new('RGB', (600, 600), color = 'red')
         app.engine.image = app.engine.original_image.copy()
         self.image_preview.clear_widgets()
-        from kivy.uix.image import Image as KivyImage
-        from io import BytesIO
+
         img_byte_arr = BytesIO()
         app.engine.image.save(img_byte_arr, format='PNG')
         img_byte_arr.seek(0)
@@ -71,6 +72,10 @@ class ConversionTypeScreen(MDScreen):
         app = MDApp.get_running_app()
         result = app.engine.apply_transformation(transform_type)
         if result["success"]:
+            # Save the image to a temporary file to be displayed in the gallery
+            temp_path = "temp_creation.png"
+            app.engine.image.save(temp_path)
+            app.db.save_creation(temp_path, transform_type)
             self.manager.current = 'output_preview'
         else:
             print(result["message"])

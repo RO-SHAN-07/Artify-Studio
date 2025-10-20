@@ -4,7 +4,7 @@ from kivymd.uix.gridlayout import MDGridLayout
 from kivymd.uix.scrollview import MDScrollView
 from kivymd.uix.card import MDCard
 from kivymd.uix.label import MDLabel
-from kivymd.uix.button import MDIconButton
+from kivymd.uix.button import MDIconButton, MDRaisedButton
 from kivymd.uix.toolbar import MDTopAppBar
 from kivymd.app import MDApp
 
@@ -34,6 +34,10 @@ class HomeScreen(MDScreen):
 
         layout.add_widget(quick_actions_grid)
 
+        # Batch Process Button
+        layout.add_widget(MDRaisedButton(text="Batch Process", on_release=self.batch_process,
+                                       pos_hint={'center_x': 0.5}))
+
         # Recent Creations
         layout.add_widget(MDLabel(text="Recent Creations", font_style="H6", padding=(10, 10)))
 
@@ -56,3 +60,13 @@ class HomeScreen(MDScreen):
 
     def open_drawer(self):
         MDApp.get_running_app().navigation_layout.toggle_nav_drawer()
+
+    def batch_process(self, *args):
+        app = MDApp.get_running_app()
+        # Simulate selecting multiple images
+        image_paths = ["dummy_path1.png", "dummy_path2.png", "dummy_path3.png"]
+        results = app.engine.batch_process(image_paths, "pencil_sketch")
+        for result in results:
+            # In a real app, we would save the images to the gallery
+            app.db.save_creation(result["path"], "pencil_sketch")
+        self.switch_screen('my_creations')

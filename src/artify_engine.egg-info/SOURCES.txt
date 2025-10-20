@@ -1,5 +1,0 @@
-setup.py
-artify_engine.egg-info/PKG-INFO
-artify_engine.egg-info/SOURCES.txt
-artify_engine.egg-info/dependency_links.txt
-artify_engine.egg-info/top_level.txt

@@ -1,9 +1,9 @@
 from dataclasses import dataclass
-from PIL import Image
+from PIL import Image, ImageDraw
 import cv2
 import numpy as np
-import turtle
 from io import BytesIO
+from typing import List
 
 @dataclass
 class TransformationConfig:
@@ -48,6 +48,16 @@ class ImageTransformationEngine:
         else:
             return {"success": False, "message": "Invalid transformation type."}
 
+    def batch_process(self, image_paths: List[str], transform_type: str, params: dict = None):
+        results = []
+        for path in image_paths:
+            load_result = self.load_image(path)
+            if load_result["success"]:
+                transform_result = self.apply_transformation(transform_type, params)
+                if transform_result["success"]:
+                    results.append({"path": path, "image": self.image.copy()})
+        return results
+
     def export_result(self, format: str = "PNG", quality: int = 95):
         if self.image is None:
             return {"success": False, "message": "No image to export."}
@@ -75,8 +85,14 @@ class ImageTransformationEngine:
     def colored_sketch(self, params: dict = None):
         try:
             open_cv_image = cv2.cvtColor(np.array(self.image), cv2.COLOR_RGB2BGR)
-            # Add your colored sketch logic here
-            self.image = Image.fromarray(cv2.cvtColor(open_cv_image, cv2.COLOR_BGR2RGB))
+            gray_image = cv2.cvtColor(open_cv_image, cv2.COLOR_BGR2GRAY)
+            inverted_image = 255 - gray_image
+            blurred = cv2.GaussianBlur(inverted_image, (21, 21), 0)
+            inverted_blurred = 255 - blurred
+            pencil_sketch = cv2.divide(gray_image, inverted_blurred, scale=256.0)
+            pencil_sketch_bgr = cv2.cvtColor(pencil_sketch, cv2.COLOR_GRAY2BGR)
+            colored_sketch = cv2.bitwise_and(open_cv_image, pencil_sketch_bgr)
+            self.image = Image.fromarray(cv2.cvtColor(colored_sketch, cv2.COLOR_BGR2RGB))
             return {"success": True, "message": "Colored sketch applied successfully."}
         except Exception as e:
             return {"success": False, "message": f"Error applying colored sketch: {e}"}
@@ -93,19 +109,11 @@ class ImageTransformationEngine:
 
     def turtle_graphics(self, params: dict = None):
         try:
-            # This is a placeholder for a more complex turtle graphics implementation
-            screen = turtle.Screen()
-            screen.setup(width=self.image.width, height=self.image.height)
-
-            # Save the turtle graphics to a canvas, then to an image
-            canvas = screen.getcanvas()
-            canvas.postscript(file="turtle.eps")
-
-            # Convert the EPS file to an image
-            # This requires ghostscript to be installed
-            # For simplicity, we'll return a blank image
-            self.image = Image.new('RGB', (self.image.width, self.image.height), color = 'white')
-
+            # Placeholder for turtle graphics using Pillow
+            img = Image.new('RGB', (self.image.width, self.image.height), color = 'white')
+            d = ImageDraw.Draw(img)
+            d.text((10,10), "Turtle Graphics Placeholder", fill=(0,0,0))
+            self.image = img
             return {"success": True, "message": "Turtle graphics applied successfully."}
         except Exception as e:
             return {"success": False, "message": f"Error applying turtle graphics: {e}"}

@@ -9,6 +9,7 @@ from screens.settings_screen import SettingsScreen
 from screens.my_creations_screen import MyCreationsScreen
 from screens.profile_screen import ProfileScreen
 from engine import ImageTransformationEngine, TransformationConfig
+from database import Database
 
 class ArtifyStudioApp(MDApp):
     def build(self):
@@ -16,6 +17,7 @@ class ArtifyStudioApp(MDApp):
         self.theme_cls.theme_style = "Light"
 
         self.engine = ImageTransformationEngine()
+        self.db = Database()
 
         self.navigation_layout = MDNavigationLayout()
         self.screen_manager = ScreenManager()

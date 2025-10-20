@@ -10,7 +10,7 @@ package.name = artifystudio
 package.domain = com.roshan
 
 # (str) Source code where the main.py live
-source.dir = artify_studio
+source.dir = .
 
 # (list) Source files to include (let empty to include all the files)
 source.include_exts = py,png,jpg,kv,atlas
@@ -336,7 +336,7 @@ android.allow_backup = True
 #p4a.hook =
 
 # (str) Bootstrap to use for android builds
-p4a.bootstrap = web
+p4a.bootstrap = sdl2
 
 # NOTE: The web build uses Emscripten and WebAssembly to run the Kivy
 # application in a web browser. The output will be a directory

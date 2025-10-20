@@ -47,7 +47,7 @@ class MyCreationsScreen(MDScreen):
         self.add_widget(layout)
 
     def go_back(self):
-        MDApp.get_running_app().switch_screen('home')
+        MDApp.get_running_app().switch_screen('home', close_drawer=False)
 
     def switch_screen(self, screen_name):
         self.manager.current = screen_name

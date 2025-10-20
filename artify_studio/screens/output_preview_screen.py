@@ -47,4 +47,4 @@ class OutputPreviewScreen(MDScreen):
         self.add_widget(layout)
 
     def go_back(self):
-        MDApp.get_running_app().switch_screen('conversion_type')
+        MDApp.get_running_app().switch_screen('conversion_type', close_drawer=False)

@@ -62,9 +62,10 @@ class ArtifyStudioApp(MDApp):
 
         return self.navigation_layout
 
-    def switch_screen(self, screen_name):
+    def switch_screen(self, screen_name, close_drawer=True):
         self.screen_manager.current = screen_name
-        self.navigation_layout.toggle_nav_drawer()
+        if close_drawer:
+            self.navigation_layout.toggle_nav_drawer()
 
 if __name__ == '__main__':
     ArtifyStudioApp().run()

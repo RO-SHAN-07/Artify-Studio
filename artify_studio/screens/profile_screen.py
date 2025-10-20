@@ -64,4 +64,4 @@ class ProfileScreen(MDScreen):
         self.add_widget(layout)
 
     def go_back(self):
-        MDApp.get_running_app().switch_screen('home')
+        MDApp.get_running_app().switch_screen('home', close_drawer=False)

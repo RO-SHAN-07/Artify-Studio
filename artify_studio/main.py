@@ -1,5 +1,6 @@
 from kivymd.app import MDApp
 from kivy.uix.screenmanager import ScreenManager
+from kivymd.uix.navigationdrawer import MDNavigationLayout, MDNavigationDrawer, MDNavigationDrawerMenu, MDNavigationDrawerHeader, MDNavigationDrawerItem
 from screens.splash_screen import SplashScreen
 from screens.home_screen import HomeScreen
 from screens.conversion_type_screen import ConversionTypeScreen
@@ -11,15 +12,59 @@ from screens.profile_screen import ProfileScreen
 class ArtifyStudioApp(MDApp):
     def build(self):
         self.theme_cls.primary_palette = "Blue"
-        sm = ScreenManager()
-        sm.add_widget(SplashScreen(name='splash'))
-        sm.add_widget(HomeScreen(name='home'))
-        sm.add_widget(ConversionTypeScreen(name='conversion_type'))
-        sm.add_widget(OutputPreviewScreen(name='output_preview'))
-        sm.add_widget(SettingsScreen(name='settings'))
-        sm.add_widget(MyCreationsScreen(name='my_creations'))
-        sm.add_widget(ProfileScreen(name='profile'))
-        return sm
+        self.theme_cls.theme_style = "Light"
+
+        self.navigation_layout = MDNavigationLayout()
+        self.screen_manager = ScreenManager()
+
+        screens = {
+            'splash': SplashScreen,
+            'home': HomeScreen,
+            'conversion_type': ConversionTypeScreen,
+            'output_preview': OutputPreviewScreen,
+            'settings': SettingsScreen,
+            'my_creations': MyCreationsScreen,
+            'profile': ProfileScreen
+        }
+
+        for name, screen_class in screens.items():
+            self.screen_manager.add_widget(screen_class(name=name))
+
+        self.navigation_layout.add_widget(self.screen_manager)
+
+        navigation_drawer_menu = MDNavigationDrawerMenu()
+
+        menu_items = [
+            ("Home", "home", "home"),
+            ("My Creations", "creation", "my_creations"),
+            ("Settings", "cog", "settings"),
+            ("Profile", "account", "profile"),
+        ]
+
+        for text, icon, screen_name in menu_items:
+            navigation_drawer_menu.add_widget(
+                MDNavigationDrawerItem(
+                    MDNavigationDrawerHeader(text=text, icon=icon),
+                    on_release=lambda x, screen=screen_name: self.switch_screen(screen)
+                )
+            )
+
+        navigation_drawer = MDNavigationDrawer(
+            MDNavigationDrawerHeader(
+                title="Artify Studio",
+                text="Version 1.0.0",
+                spacing="4dp",
+                padding=("12dp", 0, 0, "12dp"),
+            ),
+            navigation_drawer_menu
+        )
+        self.navigation_layout.add_widget(navigation_drawer)
+
+        return self.navigation_layout
+
+    def switch_screen(self, screen_name):
+        self.screen_manager.current = screen_name
+        self.navigation_layout.toggle_nav_drawer()
 
 if __name__ == '__main__':
     ArtifyStudioApp().run()

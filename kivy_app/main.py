@@ -8,11 +8,14 @@ from screens.output_preview_screen import OutputPreviewScreen
 from screens.settings_screen import SettingsScreen
 from screens.my_creations_screen import MyCreationsScreen
 from screens.profile_screen import ProfileScreen
+from engine import ImageTransformationEngine, TransformationConfig
 
 class ArtifyStudioApp(MDApp):
     def build(self):
         self.theme_cls.primary_palette = "Blue"
         self.theme_cls.theme_style = "Light"
+
+        self.engine = ImageTransformationEngine()
 
         self.navigation_layout = MDNavigationLayout()
         self.screen_manager = ScreenManager()
